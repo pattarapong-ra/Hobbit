@@ -97,6 +97,8 @@ func main() {
 			var product Product
 			var addProductName string
 			var addProductPrice, addProductQuantity, addProductID int
+			var itemIndex int
+			dupe := false
 
 			addProductID = len(productList)
 			product.productID = addProductID
@@ -105,18 +107,24 @@ func main() {
 			product.productName = addProductName
 			fmt.Printf("ราคาของสินค้าที่เพิ่ม : ")
 			fmt.Scanf("%d", &addProductPrice)
-			for i := 0; i < len(productList); i++ {
-				if product.productName == productList[i].productName && productList[i].productPrice == product.productPrice {
-					uyt
-				}
-			}
 			product.productPrice = addProductPrice
 			fmt.Printf("จำนวนสินค้าที่เพิ่ม : ")
 			fmt.Scanf("%d", &addProductQuantity)
 			product.productQuantity += addProductQuantity
+			for i := 0; i < len(productList); i++ {
+				if product.productName == productList[i].productName && productList[i].productPrice == product.productPrice {
+					dupe = true
+					itemIndex = i
+				}
+			}
+			if dupe == true {
+				productList[itemIndex].productQuantity += addProductQuantity
+				ShowProduct(productList)
+			} else {
+				productList = append(productList, product)
+				ShowProduct(productList)
+			}
 
-			productList = append(productList, product)
-			ShowProduct(productList)
 		case "exit":
 			fmt.Println("exit")
 		}

@@ -105,9 +105,9 @@ func main() {
 			product.productName = addProductName
 			fmt.Printf("ราคาของสินค้าที่เพิ่ม : ")
 			fmt.Scanf("%d", &addProductPrice)
-			for i:=0;i<len(productList);i++{
-				if product.productName == productList[i].productName && product {
-					
+			for i := 0; i < len(productList); i++ {
+				if product.productName == productList[i].productName && productList[i].productPrice == product.productPrice {
+
 				}
 			}
 			product.productPrice = addProductPrice

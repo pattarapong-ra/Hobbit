@@ -4,6 +4,10 @@ import (
 	"fmt"
 )
 
+type Numbers struct {
+	x int
+}
+
 func abs(x int) int {
 	if x < 0 {
 		return -x
@@ -11,24 +15,28 @@ func abs(x int) int {
 	return x
 }
 
-func primeNumber(num int) {
-	tempNum := abs(num)
+func (num Numbers) check() string {
+	tempNum := abs(num.x)
 	if tempNum == 1 || tempNum == 0 {
 		fmt.Println(num, " is not a prime number.")
 	} else if tempNum > 1 {
 		for i := 2; i < int(tempNum); i++ {
-			if (num % i) == 0 {
-				fmt.Println(num, " is not a prime number.")
-				return
+			if (tempNum % i) == 0 {
+				return "This is not a prime number."
 			}
 		}
-		fmt.Println(num, " is a prime number.")
 	}
+	return "This is a prime number."
 }
 
 func main() {
-	var number int
+	var inputNumber int
 	fmt.Printf("Input a number to check :")
-	fmt.Scanf("%d", &number)
-	primeNumber(number)
+	fmt.Scanf("%d", &inputNumber)
+	numberStruct := Numbers{inputNumber}
+	fmt.Println(numberStruct.check())
 }
+
+/*func(reciver_name Type) method_name(parameter_list)(return_type){
+// Code
+}*/

@@ -32,6 +32,7 @@ func main() {
 	for menuChoice != "exit" {
 		fmt.Println("\tget")
 		fmt.Println("\tadd")
+		fmt.Println("\tShow")
 		fmt.Println("\texit")
 		fmt.Printf("ตัวเลือก : ")
 		fmt.Scanf("%s", &menuChoice)
@@ -93,6 +94,7 @@ func main() {
 			if sumPrice > payMoney {
 				fmt.Println("จำนวนเงินที่จ่ายไม่เพียงพอ ทำรายการไม่สำเร็จ")
 				fmt.Println("กรุณาทำรายการใหม่อีกครั้ง")
+				break
 			} else {
 				productList[productChoice-1].productQuantity -= buyQuantity
 				fmt.Println("ทำรายการสำเร็จ")
@@ -172,6 +174,8 @@ func main() {
 				ShowProduct(productList)
 			}
 
+		case "Show":
+			ShowProduct(productList)
 		case "exit":
 			fmt.Println("exit")
 		}

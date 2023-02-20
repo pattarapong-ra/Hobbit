@@ -17,7 +17,7 @@ func main() {
 	specialslice := []string{}
 	englishslice := []string{}
 	thaislice := []string{}
-	numbersslice := []string{}hgf
+	numbersslice := []string{}
 	for i := 0; i < len(tr); i++ {
 		temp := rune(tr[i])
 		fmt.Println(i)

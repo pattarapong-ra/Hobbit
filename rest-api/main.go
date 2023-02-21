@@ -32,10 +32,9 @@ func getPost(w http.ResponseWriter, r *http.Request) { // get specific post
 			fmt.Println("gggggg22222")
 			break
 		}
-		return
+		//return
 	}
-	json.NewEncoder(w).Encode(&Post{})
-	fmt.Println("gggggg")
+
 }
 
 func createPost(w http.ResponseWriter, r *http.Request) {
@@ -85,5 +84,5 @@ func main() {
 	router.HandleFunc("/posts/{id}", getPost).Methods("GET")
 	router.HandleFunc("/posts/{id}", updatePost).Methods("PUT")
 	router.HandleFunc("/posts/{id}", deletePost).Methods("DELETE")
-	http.ListenAndServe(":8000", router)
+	http.ListenAndServe(":8002", router)
 }

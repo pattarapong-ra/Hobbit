@@ -29,10 +29,8 @@ func getPost(w http.ResponseWriter, r *http.Request) { // get specific post
 	for _, item := range posts {
 		if item.ID == params["id"] {
 			json.NewEncoder(w).Encode(item)
-			fmt.Println("gggggg22222")
 			break
 		}
-		//return
 	}
 
 }
@@ -49,12 +47,17 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 func updatePost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
+	fmt.Println(params)
+	fmt.Println(r)
 	for index, item := range posts {
 		if item.ID == params["id"] {
 			posts = append(posts[:index], posts[index+1:]...) //remove from list
 			var post Post
+			fmt.Println(post)
 			_ = json.NewDecoder(r.Body).Decode(&post)
+			fmt.Println(post)
 			post.ID = params["id"]
+			fmt.Println(post)
 			posts = append(posts, post) //put in the back of list
 			json.NewEncoder(w).Encode(&post)
 			return
@@ -68,6 +71,7 @@ func deletePost(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	for index, item := range posts {
 		if item.ID == params["id"] {
+			fmt.Println(params["id"])
 			posts = append(posts[:index], posts[index+1:]...)
 			break
 		}

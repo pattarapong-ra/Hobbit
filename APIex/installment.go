@@ -16,6 +16,7 @@ type requestMessage struct {
 
 type respondMessage struct {
 	ResBody respondBody `json:"rs_body"`
+	err     error
 }
 
 //decimal.Dec2
@@ -35,12 +36,16 @@ func calculateInstallmentAmount(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var installmentRespond respondMessage
 	var installmentRequest requestMessage
-	_ = json.NewDecoder(r.Body).Decode(&installmentRequest)
+	err1 := json.NewDecoder(r.Body).Decode(&installmentRequest)
+	if err1 != nil {
+		fmt.Println(err1)
+	}
 	interest := installmentRequest.ReqBody.InterestRate / 100 //percentage convert
 	disbursement := installmentRequest.ReqBody.DisbursementAmount
 	numberOfPayment := float64(installmentRequest.ReqBody.NumberOfPayment)
 	tempRespond := fmt.Sprintf("%.2f", disbursement/((1-(1/(math.Pow(1+interest/12, numberOfPayment))))/(interest/12)))
 	installmentRespond.ResBody.InstallmentAmount, _ = strconv.ParseFloat(tempRespond, 64)
+	installmentRespond.err = err1
 	json.NewEncoder(w).Encode(&installmentRespond)
 }
 

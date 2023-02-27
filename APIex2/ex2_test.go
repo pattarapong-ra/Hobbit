@@ -3,6 +3,7 @@ package main
 import (
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestGetPromo(t *testing.T) {
@@ -37,7 +38,7 @@ func TestGetPromo(t *testing.T) {
 		{
 			name: "Success",
 			args: args{
-				currentDate: "2020-06-30",
+				currentDate: time.Date(2020, time.April, 11, 21, 34, 01, 0, time.UTC).Format("2006-01-02"),
 			},
 			want: promotion{
 				PromoName:    "Promo2",

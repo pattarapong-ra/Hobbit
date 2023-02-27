@@ -27,14 +27,6 @@ func GetPromo(currentDate string) promotion {
 	}
 	defer rows.Close()
 
-	/*var promotionList []promotion
-	for rows.Next() {
-		var promoTemp promotion
-		if err := rows.Scan(&promoTemp.PromoName, promoTemp.Start_date, promoTemp.End_date); err != nil {
-			fmt.Println(err)
-		}
-		promotionList = append(promotionList, promoTemp)
-	}*/
 	for rows.Next() {
 		var promoName, startDate, endDate string
 		if err := rows.Scan(&promoName, &startDate, &endDate); err != nil {
@@ -54,11 +46,6 @@ func GetPromo(currentDate string) promotion {
 			currentPromo.PromoName = promoName
 		}
 	}
-	/*for _, val := range promotionList {
-		if currentDate >= val.Start_date && currentDate <= val.End_date{
-			currentPromo = val.PromoName
-		}
-	}*/
 
 	rows, err = db.Query("SELECT promotion_name,interest_rate FROM Rate;")
 	if err != nil {
@@ -81,30 +68,18 @@ func GetPromo(currentDate string) promotion {
 	return promotion{}
 }
 
-/*var employeeBonus []EmployeeQuery
-var employees []Employee
-for rows.Next() {
-	var emp Employee
-	if err := rows.Scan(&emp.EmployeeID, &emp.Name, &emp.Salary); err != nil {
-		fmt.Println(err)
-	}
-	employees = append(employees, emp)
-}
-for _, val := range employees {
-	var tempEmp EmployeeQuery
-	tempEmp.EmployeeID = val.EmployeeID
-	if val.Name[0:1] != "M" && (val.EmployeeID%2) == 1 {
-		tempEmp.Bonus = val.Salary
-	} else {
-		tempEmp.Bonus = 0
-	}
-	employeeBonus = append(employeeBonus, tempEmp)
-}*/
-func insertAccountDetail(db *sql.DB, installmentRespond respondMessage) error {
-	insertInto := fmt.Sprintf("INSERT INTO account(account_number,installment_amount) VALUES('%d','%.2f');", installmentRespond.ResBody.AccountNumber, installmentRespond.ResBody.InstallmentAmount)
-	//insertInto := fmt.Sprintf("INSERT INTO account(account_number,installment_amount) VALUES('")+installmentRespond.ResBody.AccountNumber+installmentRespond.ResBody.InstallmentAmount)
+func insertAccountDetail(db *sql.DB, Respond respondMessage) error {
+	//insertInto := fmt.Sprintf(`INSERT INTO Account (account_number,installment_amount ) VALUES('%d','%.2f')`, Respond.ResBody.AccountNumber, Respond.ResBody.InstallmentAmount)
+	insertInto := fmt.Sprintf(`INSERT INTO Account VALUES('%d','%.2f')`, Respond.ResBody.AccountNumber, Respond.ResBody.InstallmentAmount)
+	//insertInto := `INSERT INTO "Account"(account_number,installment_amount ) values($1,$2)`
+	/*tempAcc,_:=strconv.Atoi(Respond.ResBody.AccountNumber)
+	tempInstall:=fmt.Sprintf()
+	insertInto := "INSERT INTO Account()VALUES('" +tempAcc+ "'),('" +tempInstall+ "');"*/
+	//insertInto := "INSERT INTO Account VALUES('12345678','322.69')"
 	fmt.Println(insertInto)
-	_, errinsert := db.Exec(insertInto)
+	//_, errinsert := db.Exec(insertInto, Respond.ResBody.AccountNumber, Respond.ResBody.InstallmentAmount)
+	tempResult, errinsert := db.Exec(insertInto)
+	fmt.Println(tempResult)
 	if errinsert != nil {
 		return errinsert
 	}

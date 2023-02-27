@@ -68,7 +68,7 @@ func createtableRate(db *sql.DB) error {
 
 	createTable := `CREATE TABLE Rate (
 		rate varchar(20),
-		interest_rate float,
+		interest_rate numeric (7,5),
 		promotion_name varchar(20),
 		PRIMARY KEY (rate)
 		);`
@@ -96,14 +96,15 @@ func createtableRate(db *sql.DB) error {
 func createtableAccount(db *sql.DB) error {
 
 	dropBeforeCreateTable := `DROP TABLE IF EXISTS Account;`
+	fmt.Println(dropBeforeCreateTable)
 	_, errdropBeforeCreateTable := db.Exec(dropBeforeCreateTable)
 	if errdropBeforeCreateTable != nil {
 		return errdropBeforeCreateTable
 	}
 
 	createTable := `CREATE TABLE Account (
-		account_number int,
-		installment_amount float,
+		account_number numeric,
+		installment_amount numeric,
 		PRIMARY KEY (account_number)
 		);`
 	_, errcreateTable := db.Exec(createTable)

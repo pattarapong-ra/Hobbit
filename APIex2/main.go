@@ -106,7 +106,7 @@ func main() {
 	InitializeDB()
 	r := mux.NewRouter()
 	r.HandleFunc("/dloan-payment/v1/calculate-installment-amount", calculateInstallmentAmount).Methods("POST")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":8089", r))
 }
 
 func CheckError(err error) {

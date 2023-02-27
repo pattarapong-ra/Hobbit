@@ -53,6 +53,11 @@ type promotion struct {
 	End_date string
 }
 
+type rate struct{
+	PromoName string
+	InterestRate float64
+}
+
 func calculateInstallmentAmount(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var installmentRespond respondMessage

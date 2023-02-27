@@ -69,15 +69,8 @@ func GetPromo(currentDate string) promotion {
 }
 
 func insertAccountDetail(db *sql.DB, Respond respondMessage) error {
-	//insertInto := fmt.Sprintf(`INSERT INTO Account (account_number,installment_amount ) VALUES('%d','%.2f')`, Respond.ResBody.AccountNumber, Respond.ResBody.InstallmentAmount)
 	insertInto := fmt.Sprintf(`INSERT INTO Account VALUES('%d','%.2f')`, Respond.ResBody.AccountNumber, Respond.ResBody.InstallmentAmount)
-	//insertInto := `INSERT INTO "Account"(account_number,installment_amount ) values($1,$2)`
-	/*tempAcc,_:=strconv.Atoi(Respond.ResBody.AccountNumber)
-	tempInstall:=fmt.Sprintf()
-	insertInto := "INSERT INTO Account()VALUES('" +tempAcc+ "'),('" +tempInstall+ "');"*/
-	//insertInto := "INSERT INTO Account VALUES('12345678','322.69')"
 	fmt.Println(insertInto)
-	//_, errinsert := db.Exec(insertInto, Respond.ResBody.AccountNumber, Respond.ResBody.InstallmentAmount)
 	tempResult, errinsert := db.Exec(insertInto)
 	fmt.Println(tempResult)
 	if errinsert != nil {

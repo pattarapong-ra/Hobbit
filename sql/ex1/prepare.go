@@ -33,6 +33,7 @@ func createtableEmployees(db *sql.DB) error {
 		employee_id int,
 		name varchar(255),
 		salary int
+		PRIMARY KEY (employee_id)
 		);`
 	_, errcreateTable := db.Exec(createTable)
 	if errcreateTable != nil {

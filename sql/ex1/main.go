@@ -6,11 +6,10 @@ import (
 	"log"
 	"net/http"
 
-	_ "github.com/lib/pq"
-
-	"github.com/go-beginner-training/sql/ex2"
-	"github.com/go-beginner-training/sql/ex3"
 	"github.com/gorilla/mux"
+	_ "github.com/lib/pq"
+	"github.com/pattarapong-ra/Hobbit/tree/main/exercise2/sql/ex2"
+	"github.com/pattarapong-ra/Hobbit/tree/main/exercise2/sql/ex3"
 )
 
 type Employee struct {

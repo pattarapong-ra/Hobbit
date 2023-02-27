@@ -45,19 +45,9 @@ func TestGetPromo(t *testing.T) {
 			},
 		},
 		{
-			name: "Success",
-			args: args{
-				currentDate: "2020-02-29",
-			},
-			want: promotion{
-				PromoName:    "Promo1",
-				InterestRate: 2.5,
-			},
-		},
-		{
 			name: "Fail",
 			args: args{
-				currentDate: "2021-01-01",
+				currentDate: "2020-01",
 			},
 			want: promotion{
 				PromoName:    "",

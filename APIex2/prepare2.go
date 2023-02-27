@@ -1,12 +1,16 @@
 package main
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+)
 
 func PrepareTable(db *sql.DB) error {
 	errCreatetablePromotion := createtablePromotion(db)
 	if errCreatetablePromotion != nil {
 		return errCreatetablePromotion
 	}
+
 	errCreatetableRate := createtableRate(db)
 	if errCreatetableRate != nil {
 		return errCreatetableRate
@@ -15,6 +19,7 @@ func PrepareTable(db *sql.DB) error {
 	if errCreatetableAccount != nil {
 		return errCreatetableAccount
 	}
+	fmt.Println("done creating table")
 	return nil
 }
 func createtablePromotion(db *sql.DB) error {
@@ -55,7 +60,7 @@ func createtablePromotion(db *sql.DB) error {
 
 func createtableRate(db *sql.DB) error {
 
-	dropBeforeCreateTable := `DROP TABLE IF EXISTS Rate ;`
+	dropBeforeCreateTable := `DROP TABLE IF EXISTS Rate;`
 	_, errdropBeforeCreateTable := db.Exec(dropBeforeCreateTable)
 	if errdropBeforeCreateTable != nil {
 		return errdropBeforeCreateTable
@@ -63,7 +68,7 @@ func createtableRate(db *sql.DB) error {
 
 	createTable := `CREATE TABLE Rate (
 		rate varchar(20),
-		interest_rate numeric(2,5),
+		interest_rate float,
 		promotion_name varchar(20),
 		PRIMARY KEY (rate)
 		);`
@@ -90,15 +95,15 @@ func createtableRate(db *sql.DB) error {
 }
 func createtableAccount(db *sql.DB) error {
 
-	dropBeforeCreateTable := `DROP TABLE IF EXISTS Account ;`
+	dropBeforeCreateTable := `DROP TABLE IF EXISTS Account;`
 	_, errdropBeforeCreateTable := db.Exec(dropBeforeCreateTable)
 	if errdropBeforeCreateTable != nil {
 		return errdropBeforeCreateTable
 	}
 
 	createTable := `CREATE TABLE Account (
-		account_number numeric(12),
-		installment_amount numeric(18,2),
+		account_number int,
+		installment_amount float,
 		PRIMARY KEY (account_number)
 		);`
 	_, errcreateTable := db.Exec(createTable)

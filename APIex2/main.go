@@ -8,10 +8,9 @@ import (
 	"math"
 	"net/http"
 	"strconv"
-	"time"
+
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
-	"github.com/pattarapong-ra/Hobbit/tree/main/exercise2/sql/ex3"
 )
 
 const (
@@ -38,6 +37,7 @@ type requestBody struct {
 	CalculateDate      string  `json:"cal_date"`
 	PaymentFrequency   int     `json:"payment_frequency"`
 	PaymentUnit        string  `json:"payment_unit"`
+	AccountNumber      int     `json:"account_number"`
 }
 
 type respondBody struct {
@@ -48,13 +48,7 @@ type respondBody struct {
 }
 
 type promotion struct {
-	PromoName string
-	Start_date string
-	End_date string
-}
-
-type rate struct{
-	PromoName string
+	PromoName    string
 	InterestRate float64
 }
 
@@ -67,24 +61,28 @@ func calculateInstallmentAmount(w http.ResponseWriter, r *http.Request) {
 	if errorRequestDecode != nil {
 		log.Fatal(errorRequestDecode)
 	}
-	//calculate interest from promo date
-	
-
-	calculateDate :=installmentRequest.ReqBody.CalculateDate
-    t, err := time.Parse(layout, calculateDate)
-    if err != nil {
-        log.Fatal(err)
-    }
-	fmt.Println(t)
-
-	interest := installmentRequest.ReqBody.InterestRate / 100 //percentage convert
 	disbursement := installmentRequest.ReqBody.DisbursementAmount
 	numberOfPayment := float64(installmentRequest.ReqBody.NumberOfPayment)
+	calculateDate := installmentRequest.ReqBody.CalculateDate
+	installmentRespond.ResBody.AccountNumber = installmentRequest.ReqBody.AccountNumber
+	currentPromo := GetPromo(calculateDate)
+	interest := currentPromo.InterestRate / 100
 	tempRespond := fmt.Sprintf("%.2f", disbursement/((1-(1/(math.Pow(1+interest/12, numberOfPayment))))/(interest/12)))
 	installmentRespond.ResBody.InstallmentAmount, errorRespondFloat = strconv.ParseFloat(tempRespond, 64)
 	if errorRespondFloat != nil {
 		log.Fatal(errorRespondFloat)
 	}
+
+	installmentRespond.ResBody.PromotionName = currentPromo.PromoName
+	installmentRespond.ResBody.InterestRate = interest
+	installmentRespond.ResBody.AccountNumber = installmentRequest.ReqBody.AccountNumber
+
+	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	db, err := sql.Open("postgres", psqlconn)
+	CheckError(err)
+	defer db.Close()
+	insertAccountDetail(db, installmentRespond)
+
 	json.NewEncoder(w).Encode(&installmentRespond)
 }
 
@@ -108,7 +106,6 @@ func main() {
 	InitializeDB()
 	r := mux.NewRouter()
 	r.HandleFunc("/dloan-payment/v1/calculate-installment-amount", calculateInstallmentAmount).Methods("POST")
-	r.HandleFunc("/get/swapSalary", ex3.SwapSalary).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
 

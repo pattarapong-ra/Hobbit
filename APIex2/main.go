@@ -54,6 +54,17 @@ type promotion struct {
 
 func calculateInstallmentAmount(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	/*query, err:=url.ParseQuery(r.URL.RawQuery)
+	if err != nil{
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w,"invalid req")
+	}
+	word:=query.Get("word")
+	if condition {
+
+	}*/
+
 	var installmentRespond respondMessage
 	var installmentRequest requestMessage
 	var errorRespondFloat error
@@ -81,7 +92,7 @@ func calculateInstallmentAmount(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("postgres", psqlconn)
 	CheckError(err)
 	defer db.Close()
-	insertAccountDetail(db, installmentRespond)
+	//insertAccountDetail(db, installmentRespond)
 
 	json.NewEncoder(w).Encode(&installmentRespond)
 }

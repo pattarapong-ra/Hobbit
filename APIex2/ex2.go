@@ -41,6 +41,7 @@ func GetPromo(currentDate string) promotion {
 		if errDate != nil {
 			fmt.Println(errDate)
 		}
+		fmt.Println("debug")
 
 		if (currentDateTemp.After(promoStartDateTemp) && currentDateTemp.Before(promoEndDateTemp)) || (currentDateTemp.Equal(promoStartDateTemp)) || (currentDateTemp.Equal(promoEndDateTemp)) {
 			currentPromo.PromoName = promoName

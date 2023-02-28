@@ -12,6 +12,7 @@ func number(S string) string {
 
 func main() {
 	tr := "h99 ส!"
+	//tr := "3252353253252"
 	ansslice := []string{}
 	numberslice := []string{}
 	specialslice := []string{}

@@ -31,24 +31,24 @@ func (n number) show() {
 	fmt.Println("Both numbers are : ", n.num1, " and ", n.num2)
 }
 func (n number) Plus() int64 {
-	fmt.Println("Answer is ",n.num1 + n.num2)
-	return n.num1+n.num2
+	fmt.Println("Answer is ", n.num1+n.num2)
+	return n.num1 + n.num2
 }
 func (n number) Minus() int64 {
-	fmt.Println("Answer is ",n.num1 - n.num2)
-	return n.num1-n.num2
+	fmt.Println("Answer is ", n.num1-n.num2)
+	return n.num1 - n.num2
 }
 func (n number) Multi() int64 {
-	fmt.Println("Answer is ",n.num1 * n.num2)
-	return n.num1*n.num2
+	fmt.Println("Answer is ", n.num1*n.num2)
+	return n.num1 * n.num2
 }
 func (n number) Div() int64 {
-	fmt.Println("Answer is ",n.num1 / n.num2)
-	return n.num1/n.num2
+	fmt.Println("Answer is ", n.num1/n.num2)
+	return n.num1 / n.num2
 }
 
 func calculator(n mathOperator, c int64) {
-	//fmt.Println("++++++++++++++", n)
+	fmt.Println("++++++++++++++", n)
 	switch c {
 	case 1:
 		n.Plus()
@@ -58,12 +58,12 @@ func calculator(n mathOperator, c int64) {
 		n.Multi()
 	case 4:
 		n.Div()
-/*	case 5:
-		n.ChangeNumber()
-	case 6:
-		n.SwapNumber()
-	case 7:
-		n.Exit()*/
+		/*	case 5:
+				n.ChangeNumber()
+			case 6:
+				n.SwapNumber()
+			case 7:
+				n.Exit()*/
 	default:
 		fmt.Println("Input 1-7!!!")
 	}
@@ -92,7 +92,7 @@ func main() {
 		if command == 6 {
 			n.num1 += n.num2
 			n.num2 = n.num1 - n.num2
-			n.num1 = n.num1 - n.num2	// เพิ่มมมมมมม
+			n.num1 = n.num1 - n.num2 // เพิ่มมมมมมม
 		}
 		if command == 7 {
 			break

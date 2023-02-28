@@ -10,7 +10,7 @@ func GetPromo(currentDate string) promotion {
 
 	currentDateTemp, errDate := time.Parse("2006-01-02", currentDate)
 	if errDate != nil {
-		fmt.Println(errDate)
+		panic(errDate)
 	}
 
 	var currentPromo promotion

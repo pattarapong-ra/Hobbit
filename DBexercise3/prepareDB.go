@@ -23,7 +23,6 @@ func PrepareTable(db *sql.DB) error {
 	if errCreatetablePromotion != nil {
 		return errCreatetablePromotion
 	}
-	fmt.Println("done creating table")
 
 	db.Close()
 	return nil

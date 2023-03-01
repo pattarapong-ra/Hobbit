@@ -2,12 +2,8 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
-	"fmt"
 	"log"
-	"math"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -20,6 +16,7 @@ const (
 	password = "mooham12315"
 	dbname   = "postgres"
 	layout   = "2006-01-02"
+	psqlconn = "host=localhost port=5432 user=mooham12314 password=mooham12315 dbname=postgres sslmode=disable"
 )
 
 type requestMessage struct {
@@ -30,7 +27,6 @@ type respondMessage struct {
 	ResBody respondBody `json:"rs_body"`
 }
 
-//decimal.Dec2
 type requestBody struct {
 	DisbursementAmount float64 `json:"disbursement_amount"`
 	NumberOfPayment    int     `json:"number_of_payment"`
@@ -52,76 +48,12 @@ type promotion struct {
 	InterestRate float64
 }
 
-func calculateInstallmentAmount(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	/*query, err:=url.ParseQuery(r.URL.RawQuery)
-	if err != nil{
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w,"invalid req")
-	}
-	word:=query.Get("word")
-	if condition {
-
-	}*/
-
-	var installmentRespond respondMessage
-	var installmentRequest requestMessage
-	var errorRespondFloat error
-	errorRequestDecode := json.NewDecoder(r.Body).Decode(&installmentRequest)
-	if errorRequestDecode != nil {
-		log.Fatal(errorRequestDecode)
-	}
-	disbursement := installmentRequest.ReqBody.DisbursementAmount
-	numberOfPayment := float64(installmentRequest.ReqBody.NumberOfPayment)
-	calculateDate := installmentRequest.ReqBody.CalculateDate
-	installmentRespond.ResBody.AccountNumber = installmentRequest.ReqBody.AccountNumber
-	currentPromo := GetPromo(calculateDate)
-	interest := currentPromo.InterestRate / 100
-	tempRespond := fmt.Sprintf("%.2f", disbursement/((1-(1/(math.Pow(1+interest/12, numberOfPayment))))/(interest/12)))
-	installmentRespond.ResBody.InstallmentAmount, errorRespondFloat = strconv.ParseFloat(tempRespond, 64)
-	if errorRespondFloat != nil {
-		log.Fatal(errorRespondFloat)
-	}
-
-	installmentRespond.ResBody.PromotionName = currentPromo.PromoName
-	installmentRespond.ResBody.InterestRate = interest
-	installmentRespond.ResBody.AccountNumber = installmentRequest.ReqBody.AccountNumber
-
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlconn)
-	CheckError(err)
-	defer db.Close()
-	//insertAccountDetail(db, installmentRespond)
-
-	json.NewEncoder(w).Encode(&installmentRespond)
-}
-
-func InitializeDB() {
-	// connection string
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	// open database
-	db, err := sql.Open("postgres", psqlconn)
-	CheckError(err)
-	// close database
-	defer db.Close()
-	defer fmt.Println("Closed!")
-	// check db
-	err = db.Ping()
-	CheckError(err)
-	fmt.Println("Connected!")
-	PrepareTable(db)
-}
-
 func main() {
-	InitializeDB()
+	db, err := sql.Open("postgres", psqlconn)
+	checkError(err)
+	PrepareTable(db)
+
 	r := mux.NewRouter()
 	r.HandleFunc("/dloan-payment/v1/calculate-installment-amount", calculateInstallmentAmount).Methods("POST")
 	log.Fatal(http.ListenAndServe(":8089", r))
-}
-
-func CheckError(err error) {
-	if err != nil {
-		panic(err)
-	}
 }

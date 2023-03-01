@@ -8,39 +8,28 @@ import (
 
 func GetPromo(currentDate string) promotion {
 
-	currentDateTemp, errDate := time.Parse("2006-01-02", currentDate)
-	if errDate != nil {
-		panic(errDate)
-	}
-
 	var currentPromo promotion
+	currentDateTemp, err := time.Parse("2006-01-02", currentDate)
+	checkError(err)
 
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	db, err := sql.Open("postgres", psqlconn)
-	CheckError(err)
-	// close database
+	checkError(err)
 	defer db.Close()
 
 	rows, err := db.Query("SELECT promotion_name,start_date,end_date FROM Promotion;")
-	if err != nil {
-		fmt.Println(err)
-	}
+	checkError(err)
 	defer rows.Close()
 
 	for rows.Next() {
 		var promoName, startDate, endDate string
-		if err := rows.Scan(&promoName, &startDate, &endDate); err != nil {
-			fmt.Println(err)
-		}
+		err := rows.Scan(&promoName, &startDate, &endDate)
+		checkError(err)
 
-		promoStartDateTemp, errDate := time.Parse("2006-01-02", startDate[:10])
-		if errDate != nil {
-			fmt.Println(errDate)
-		}
-		promoEndDateTemp, errDate := time.Parse("2006-01-02", endDate[:10])
-		if errDate != nil {
-			fmt.Println(errDate)
-		}
+		promoStartDateTemp, err := time.Parse("2006-01-02", startDate[:10])
+		checkError(err)
+		promoEndDateTemp, err := time.Parse("2006-01-02", endDate[:10])
+		checkError(err)
 		fmt.Println("debug")
 
 		if (currentDateTemp.After(promoStartDateTemp) && currentDateTemp.Before(promoEndDateTemp)) || (currentDateTemp.Equal(promoStartDateTemp)) || (currentDateTemp.Equal(promoEndDateTemp)) {
@@ -49,16 +38,13 @@ func GetPromo(currentDate string) promotion {
 	}
 
 	rows, err = db.Query("SELECT promotion_name,interest_rate FROM Rate;")
-	if err != nil {
-		fmt.Println(err)
-	}
+	checkError(err)
 
 	for rows.Next() {
 
 		var promoTemp promotion
-		if err := rows.Scan(&promoTemp.PromoName, &promoTemp.InterestRate); err != nil {
-			fmt.Println(err)
-		}
+		err := rows.Scan(&promoTemp.PromoName, &promoTemp.InterestRate)
+		checkError(err)
 		if currentPromo.PromoName == promoTemp.PromoName {
 			currentPromo.InterestRate = promoTemp.InterestRate
 			return currentPromo
@@ -72,11 +58,9 @@ func GetPromo(currentDate string) promotion {
 func insertAccountDetail(db *sql.DB, Respond respondMessage) error {
 	insertInto := fmt.Sprintf(`INSERT INTO Account VALUES('%d','%.2f')`, Respond.ResBody.AccountNumber, Respond.ResBody.InstallmentAmount)
 	fmt.Println(insertInto)
-	tempResult, errinsert := db.Exec(insertInto)
+	tempResult, err:= db.Exec(insertInto)
 	fmt.Println(tempResult)
-	if errinsert != nil {
-		return errinsert
-	}
+	checkError(err)
 	return nil
 
 }
